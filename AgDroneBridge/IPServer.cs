@@ -48,7 +48,8 @@ public class IPServer
     }
     public void Server()
     {
-        try {
+        try 
+        {
             IPAddress ipAd = IPAddress.Parse("127.0.0.1");
              // use local m/c IP address, and 
              // use the same in the client
@@ -69,8 +70,9 @@ public class IPServer
         
             byte[] buffer=new byte[200];
             int len;
-            while (true)
+            while (mLocalSocket.Connected)
             {
+                
                 //lock (mLocalSocket)
                 {
                     len = mLocalSocket.Receive(buffer);
@@ -97,11 +99,10 @@ public class IPServer
                 }
 
             }
-            //ASCIIEncoding asen=new ASCIIEncoding();
-            //s.Send(asen.GetBytes("The string was recieved by the server."));
-            //Console.WriteLine("\nSent Acknowledgement");
-    /* clean up */            
-            //s.Close();
+            Console.WriteLine("Local Socket was closed\n");
+            mLocalSocket.Close();
+            mLocalSocket = null;
+            
             //myList.Stop();
             
         }
@@ -129,7 +130,7 @@ public class IPServer
 
                 byte[] buffer = new byte[200];
                 int len;
-                while (true) // (tcpclnt.Available != 0)
+                while (tcpclnt.Connected) // (tcpclnt.Available != 0)
                 {
                     //lock (mRemoteStream)
                     {
@@ -153,7 +154,12 @@ public class IPServer
 
                 }
 
-                //tcpclnt.Close();
+                Console.WriteLine("Remote connection was closed\n");
+
+                mRemoteStream.Close();
+                mRemoteStream = null;
+
+                tcpclnt.Close();
             }
 
             catch (Exception e)
