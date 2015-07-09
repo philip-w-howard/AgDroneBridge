@@ -1,0 +1,13 @@
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\bin\Debug\AgDroneBridge.exe.config
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\bin\Debug\AgDroneBridge.exe
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\bin\Debug\AgDroneBridge.pdb
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.csprojResolveAssemblyReference.cache
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\MainWindow.baml
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\MainWindow.g.cs
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\App.g.cs
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge_MarkupCompile.cache
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.g.resources
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.Properties.Resources.resources
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.csproj.GenerateResource.Cache
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.exe
+c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.pdb
