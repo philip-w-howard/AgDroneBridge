@@ -5,6 +5,8 @@ using System.Text;
 using System.Net.Sockets;
 using System.Threading;
 
+using mavlinklib;
+
 public class IPServer
 {
     public IPServer(AgDroneBridge.MainWindow app)
@@ -19,11 +21,47 @@ public class IPServer
     private Thread mClientThread;
     private AgDroneBridge.MainWindow mApp;
     private Stream mRemoteStream;
-    private Socket mLocalSocket;
+    private Stream mLocalStream;
     private Int64 mADSent;
     private Int64 mADReceived;
     private Int64 mMPSent;
     private Int64 mMPReceived;
+
+    private const int SERVER_CHANNEL = 0;
+    private const int CLIENT_CHANNEL = 1;
+
+    int ProcessBuffer(byte[] buff, int len, int channel, Stream dest)
+    {
+        int count = 0;
+
+        byte[] recv;
+
+        for (int ii=0; ii<len; ii++)
+        {
+            recv = MavlinkProcessor.process_byte(channel, buff[ii]);
+            if (recv.Length != 0)
+            {
+                count++;
+
+                try
+                {
+                    if (dest != null)
+                    {
+                        //lock (mRemoteStream)
+                        {
+                            dest.Write(recv, 0, recv.Length);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error sending to  " + dest.ToString() + " " + e.ToString());
+                }
+            }
+        }
+
+        return count;
+    }
 
     public void Start(int localPort, string remoteAddress, int remotePort)
     {
@@ -51,13 +89,8 @@ public class IPServer
         try 
         {
             IPAddress ipAd = IPAddress.Parse("127.0.0.1");
-             // use local m/c IP address, and 
-             // use the same in the client
-
-    /* Initializes the Listener */
             TcpListener myList=new TcpListener(ipAd, mLocalPort);
 
-    /* Start Listeneting at the specified port */        
             myList.Start();
 
             Console.WriteLine("The server is running at port " + mLocalPort);    
@@ -65,43 +98,28 @@ public class IPServer
                               myList.LocalEndpoint );
             Console.WriteLine("Waiting for a connection.....");
 
-            mLocalSocket = myList.AcceptSocket();
-            Console.WriteLine("Connection accepted from " + mLocalSocket.RemoteEndPoint);
+            Socket localSocket = myList.AcceptSocket();
+            Console.WriteLine("Connection accepted from " + localSocket.RemoteEndPoint);
         
+            mLocalStream = new NetworkStream(localSocket);
             byte[] buffer=new byte[200];
             int len;
-            while (mLocalSocket.Connected)
+            while (localSocket.Connected)
             {
                 
                 //lock (mLocalSocket)
                 {
-                    len = mLocalSocket.Receive(buffer);
+                    len = mLocalStream.Read(buffer, 0, 200);;
                 }
 
-                mMPReceived += len;
+                mMPReceived += ProcessBuffer(buffer, len, SERVER_CHANNEL, mRemoteStream);
                 mApp.SetMPReceived(mMPReceived);
-
-                try
-                {
-                    if (mRemoteStream != null)
-                    {
-                        //lock (mRemoteStream)
-                        {
-                            mRemoteStream.Write(buffer, 0, len);
-                        }
-                        mADSent += len;
-                        mApp.SetADSent(mADSent);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error sending to AD " + e.ToString());
-                }
-
             }
+
             Console.WriteLine("Local Socket was closed\n");
-            mLocalSocket.Close();
-            mLocalSocket = null;
+            localSocket.Close();
+            mLocalStream.Close();
+            mLocalStream = null;
             
             //myList.Stop();
             
@@ -136,22 +154,9 @@ public class IPServer
                     {
                         len = mRemoteStream.Read(buffer, 0, 200);
                     }
-                    mADReceived += len;
-                    mApp.SetADReceived(mADReceived);
-                    try
-                    {
-                        //lock (mLocalSocket)
-                        {
-                            mLocalSocket.Send(buffer, len, SocketFlags.None);
-                        }
-                        mMPSent += len;
-                        mApp.SetMPSent(mMPSent);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Error sending to MP " + e.ToString());
-                    }
 
+                    mADReceived += ProcessBuffer(buffer, len, CLIENT_CHANNEL, mLocalStream);
+                    mApp.SetADReceived(mADReceived);
                 }
 
                 Console.WriteLine("Remote connection was closed\n");

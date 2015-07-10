@@ -30,45 +30,8 @@ namespace AgDroneBridge
 
         private IPServer mIPServer;
 
-        private void callcpp()
-        {
-            byte[] buff = MavlinkProcessor.create_heartbeat(45, 82);
-            byte[] recv;
-
-            foreach (byte val in buff)
-            {
-                recv = MavlinkProcessor.process_byte(0, val);
-                if (recv.Length != 0)
-                {
-                    Console.Write("Recv on channel 0: ");
-                    foreach (byte value in recv)
-                    {
-                        Console.Write(value + " ");
-                    }
-                    Console.WriteLine("");
-                }
-
-                recv = MavlinkProcessor.process_byte(1, val);
-                if (recv.Length != 0)
-                {
-                    Console.Write("Recv on channel 1: ");
-                    foreach (byte value in recv)
-                    {
-                        Console.Write(value + " ");
-                    }
-                    Console.WriteLine("");
-                }
-            }
-
-        }
          private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            byte[] buffer = new byte[500];
-            int len;
-
-            callcpp();
-
-             /*
             if (StartButton.Content.Equals("Stop"))
             {
                 StartButton.Content = "Start";
@@ -79,7 +42,6 @@ namespace AgDroneBridge
                 StartButton.Content = "Stop";
                 mIPServer.Start(Convert.ToInt32(LocalPort.Text), AgDroneAddress.Text, Convert.ToInt32(AgDronePort.Text));
             }
-            */
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
