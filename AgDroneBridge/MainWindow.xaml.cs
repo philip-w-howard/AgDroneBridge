@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.Net.NetworkInformation;
+
 using mavlinklib;
 
 namespace AgDroneBridge
@@ -26,6 +28,22 @@ namespace AgDroneBridge
         {
             InitializeComponent();
             mIPServer = new IPServer(this);
+
+            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface ni in nics)
+            {
+                foreach (UnicastIPAddressInformation addr in ni.GetIPProperties().UnicastAddresses)
+                {
+                    if (addr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        byte[] bytes = addr.Address.GetAddressBytes();
+                        if (bytes[0] != 169 && bytes[0] != 127)
+                        {
+                            AgDroneAddress.Text = addr.Address.ToString();
+                        }
+                    }
+                }
+            }
         }
 
         private IPServer mIPServer;
@@ -40,7 +58,7 @@ namespace AgDroneBridge
             else 
             {
                 StartButton.Content = "Stop";
-                mIPServer.Start(Convert.ToInt32(LocalPort.Text), AgDroneAddress.Text, Convert.ToInt32(AgDronePort.Text));
+                mIPServer.Start(LocalPort.Text, AgDroneAddress.Text, AgDronePort.Text);
             }
         }
 

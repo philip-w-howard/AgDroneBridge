@@ -3,14 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:AgDroneBridge" x:Class="AgDroneBridge.MainWindow"
         Title="AgDrone Bridge" Height="350" Width="525" ResizeMode="NoResize">
-    <Grid DataContext="{Binding NumADSent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="83*"/>
             <ColumnDefinition Width="434*"/>
         </Grid.ColumnDefinitions>
         <Label Content="Local Port" HorizontalAlignment="Left" Margin="32,30,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
         <Label Content="AgDrone Address" HorizontalAlignment="Left" Margin="32,72,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="AgDroneAddress" HorizontalAlignment="Left" Height="26" Margin="79,72,0,0" TextWrapping="Wrap" Text="192.168.2.14" VerticalAlignment="Top" Width="108" Grid.Column="1"/>
+        <TextBox x:Name="AgDroneAddress" HorizontalAlignment="Left" Height="26" Margin="79,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="108" Grid.Column="1" IsReadOnly="True"/>
         <TextBox x:Name="AgDronePort" HorizontalAlignment="Left" Height="26" Margin="233,72,0,0" TextWrapping="Wrap" Text="2002" VerticalAlignment="Top" Width="52" Grid.Column="1"/>
         <TextBox x:Name="LocalPort" HorizontalAlignment="Left" Height="26" Margin="233,30,0,0" TextWrapping="Wrap" Text="2004" VerticalAlignment="Top" Width="52" Grid.Column="1"/>
         <Label x:Name="MPLabel" Content="Mission Planner" HorizontalAlignment="Left" Margin="32,160,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
@@ -23,6 +23,7 @@
         <TextBox x:Name="ADReceived" HorizontalAlignment="Left" Height="26" Margin="233,214,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
         <Button x:Name="StartButton" Content="Start" Grid.Column="1" HorizontalAlignment="Left" Margin="30,278,0,0" VerticalAlignment="Top" Width="75" Click="StartButton_Click"/>
         <Button x:Name="ExitButton" Content="Exit" Grid.Column="1" HorizontalAlignment="Left" Margin="234,278,0,0" VerticalAlignment="Top" Width="75" Click="ExitButton_Click"/>
+        <TextBox x:Name="MissionPlannerAddress" HorizontalAlignment="Left" Height="26" Margin="79,30,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="108" Grid.Column="1" IsReadOnly="True"/>
 
     </Grid>
 </Window>
