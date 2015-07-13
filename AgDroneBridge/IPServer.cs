@@ -120,7 +120,7 @@ public class IPServer
             port = Convert.ToInt32(paramList[1]);
             isLocal = Convert.ToBoolean(paramList[2]);
 
-            Console.WriteLine("Server is starting up at " + netaddr + " " + port);
+            Console.WriteLine("Server is starting up at " + netaddr + " " + port + " " + isLocal);
 
         }
         catch (Exception e)
@@ -144,10 +144,14 @@ public class IPServer
 
             while (mRunning)
             {
-                Socket localSocket = myList.AcceptSocket();
-                Console.WriteLine("Connection accepted from " + localSocket.RemoteEndPoint);
+                Socket mySocket = myList.AcceptSocket();
+                Console.WriteLine("Connection accepted from " + mySocket.RemoteEndPoint);
 
-                mLocalStream = new NetworkStream(localSocket);
+                if (isLocal)
+                    mLocalStream = new NetworkStream(mySocket);
+                else
+                    mRemoteStream = new NetworkStream(mySocket);
+
                 byte[] buffer = new byte[200];
                 int len;
                 int numZeros = 0;
@@ -158,18 +162,26 @@ public class IPServer
                     mApp.SetADConnected(true);
 
 
-                while (localSocket.Connected)
+                while (mySocket.Connected)
                 {
 
                     //lock (mLocalSocket)
                     {
-                        len = localSocket.Receive(buffer);
+                        len = mySocket.Receive(buffer);
                     }
 
                     if (len > 0)
                     {
-                        mMPReceived += ProcessBuffer(buffer, len, SERVER_CHANNEL, mRemoteStream);
-                        mApp.SetMPReceived(mMPReceived);
+                        if (isLocal)
+                        {
+                            mMPReceived += ProcessBuffer(buffer, len, SERVER_CHANNEL, mRemoteStream);
+                            mApp.SetMPReceived(mMPReceived);
+                        }
+                        else
+                        {
+                            mADReceived += ProcessBuffer(buffer, len, CLIENT_CHANNEL, mLocalStream);
+                            mApp.SetADReceived(mADReceived);
+                        }
                         numZeros = 0;
                     }
                     else
@@ -185,9 +197,17 @@ public class IPServer
                     mApp.SetADConnected(false);
 
                 Console.WriteLine("Socket at " + netaddr + ":" + port + " was closed\n");
-                localSocket.Close();
-                mLocalStream.Close();
-                mLocalStream = null;
+               mySocket.Close();
+               if (isLocal)
+                {
+                    mLocalStream.Close();
+                    mLocalStream = null;
+                }
+                else
+                {
+                    mRemoteStream.Close();
+                    mRemoteStream = null;
+                }
             }
             myList.Stop();          
         }
