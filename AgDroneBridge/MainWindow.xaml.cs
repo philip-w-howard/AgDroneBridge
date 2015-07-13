@@ -29,7 +29,7 @@ namespace AgDroneBridge
         }
 
         private IPServer mIPServer;
-
+       
          private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             if (StartButton.Content.Equals("Stop"))
@@ -50,7 +50,30 @@ namespace AgDroneBridge
         }
 
         protected delegate void UpdateTextCallback(string message);
+        protected delegate void UpdateBrushCallback(Brush brush);
 
+        public void SetMPConnected(bool connected)
+        {
+            Brush color;
+
+            if (connected)
+                color = Brushes.ForestGreen;
+            else
+                color = Brushes.Red;
+
+            MPLabel.Dispatcher.Invoke(new UpdateBrushCallback(UpdateMPLabel), new object[] { color });
+        }
+        public void SetADConnected(bool connected)
+        {
+            Brush color;
+
+            if (connected)
+                color = Brushes.ForestGreen;
+            else
+                color = Brushes.Red;
+
+            ADLabel.Dispatcher.Invoke(new UpdateBrushCallback(UpdateADLabel), new object[] { color });
+        }
         public void SetMPReceived(Int64 count)
         {
             MPReceived.Dispatcher.Invoke(
@@ -81,6 +104,14 @@ namespace AgDroneBridge
             );
         }
 
+        protected void UpdateMPLabel(Brush brush)
+        {
+            MPLabel.Background = brush;
+        }
+        protected void UpdateADLabel(Brush brush)
+        {
+            ADLabel.Background = brush;
+        }
         protected void UpdateMPReceived(string text)
         {
             MPReceived.Text = text;

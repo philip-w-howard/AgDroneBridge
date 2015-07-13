@@ -10,6 +10,8 @@ c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBrid
 c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.csproj.GenerateResource.Cache
 c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.exe
 c:\users\philhow\documents\visual studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.pdb
-C:\Users\philhow\Documents\Visual Studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.csprojResolveAssemblyReference.cache
 C:\Users\philhow\Documents\Visual Studio 2013\Projects\AgDroneBridge\AgDroneBridge\bin\Debug\mavlinklib.dll
 C:\Users\philhow\Documents\Visual Studio 2013\Projects\AgDroneBridge\AgDroneBridge\bin\Debug\mavlinklib.pdb
+C:\Users\philhow\Documents\Visual Studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\philhow\Documents\Visual Studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge_MarkupCompile.lref
+C:\Users\philhow\Documents\Visual Studio 2013\Projects\AgDroneBridge\AgDroneBridge\obj\Debug\AgDroneBridge.csprojResolveAssemblyReference.cache

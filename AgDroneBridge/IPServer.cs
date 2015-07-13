@@ -104,17 +104,22 @@ public class IPServer
             mLocalStream = new NetworkStream(localSocket);
             byte[] buffer=new byte[200];
             int len;
+            
+            mApp.SetMPConnected(true);
+
             while (localSocket.Connected)
             {
                 
                 //lock (mLocalSocket)
                 {
-                    len = mLocalStream.Read(buffer, 0, 200);;
+                    len = localSocket.Receive(buffer);
                 }
 
                 mMPReceived += ProcessBuffer(buffer, len, SERVER_CHANNEL, mRemoteStream);
                 mApp.SetMPReceived(mMPReceived);
             }
+
+            mApp.SetMPConnected(false);
 
             Console.WriteLine("Local Socket was closed\n");
             localSocket.Close();
@@ -142,12 +147,12 @@ public class IPServer
                 // use the ipaddress as in the server program
 
                 Console.WriteLine("AgDrone Connected");
-                Console.Write("Enter the string to be transmitted : ");
 
                 mRemoteStream = tcpclnt.GetStream();
 
                 byte[] buffer = new byte[200];
                 int len;
+                mApp.SetADConnected(true);
                 while (tcpclnt.Connected) // (tcpclnt.Available != 0)
                 {
                     //lock (mRemoteStream)
@@ -158,6 +163,8 @@ public class IPServer
                     mADReceived += ProcessBuffer(buffer, len, CLIENT_CHANNEL, mLocalStream);
                     mApp.SetADReceived(mADReceived);
                 }
+
+                mApp.SetADConnected(false);
 
                 Console.WriteLine("Remote connection was closed\n");
 
