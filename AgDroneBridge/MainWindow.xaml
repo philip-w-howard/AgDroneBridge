@@ -8,22 +8,24 @@
             <ColumnDefinition Width="83*"/>
             <ColumnDefinition Width="434*"/>
         </Grid.ColumnDefinitions>
-        <Label Content="Local Port" HorizontalAlignment="Left" Margin="32,30,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label Content="AgDrone Address" HorizontalAlignment="Left" Margin="32,72,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="AgDroneAddress" HorizontalAlignment="Left" Height="26" Margin="79,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="108" Grid.Column="1" IsReadOnly="True"/>
-        <TextBox x:Name="AgDronePort" HorizontalAlignment="Left" Height="26" Margin="233,72,0,0" TextWrapping="Wrap" Text="2002" VerticalAlignment="Top" Width="52" Grid.Column="1"/>
-        <TextBox x:Name="LocalPort" HorizontalAlignment="Left" Height="26" Margin="233,30,0,0" TextWrapping="Wrap" Text="2004" VerticalAlignment="Top" Width="52" Grid.Column="1"/>
-        <Label x:Name="MPLabel" Content="Mission Planner" HorizontalAlignment="Left" Margin="32,160,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label x:Name="ADLabel" Content="AgDrone" HorizontalAlignment="Left" Margin="32,214,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label Content="Sent" HorizontalAlignment="Left" Margin="79,123,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Label Content="Received" HorizontalAlignment="Left" Margin="233,123,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <TextBox x:Name="MPSent" HorizontalAlignment="Left" Height="26" Margin="79,162,0,0" Text="0" VerticalAlignment="Top" Width="76" IsUndoEnabled="False" MaxLines="1" Grid.Column="1" IsReadOnly="True" />
-        <TextBox x:Name="MPReceived" HorizontalAlignment="Left" Height="26" Margin="233,160,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
-        <TextBox x:Name="ADSent" HorizontalAlignment="Left" Height="26" Margin="79,214,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
-        <TextBox x:Name="ADReceived" HorizontalAlignment="Left" Height="26" Margin="233,214,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
+        <Label Content="Local Port" HorizontalAlignment="Left" Margin="20,30,0,0" VerticalAlignment="Top"/>
+        <Label Content="AgDrone Address" HorizontalAlignment="Left" Margin="20,72,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="AgDroneAddress" HorizontalAlignment="Left" Height="26" Margin="47,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="108" Grid.Column="1" IsReadOnly="True"/>
+        <TextBox x:Name="AgDronePort" HorizontalAlignment="Left" Height="26" Margin="185,72,0,0" TextWrapping="Wrap" Text="2002" VerticalAlignment="Top" Width="52" Grid.Column="1"/>
+        <TextBox x:Name="LocalPort" HorizontalAlignment="Left" Height="26" Margin="185,30,0,0" TextWrapping="Wrap" Text="2004" VerticalAlignment="Top" Width="52" Grid.Column="1"/>
+        <Label x:Name="MPLabel" Content="Mission Planner" HorizontalAlignment="Left" Margin="20,160,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Label x:Name="ADLabel" Content="AgDrone" HorizontalAlignment="Left" Margin="20,214,0,0" VerticalAlignment="Top"/>
+        <Label Content="Sent" HorizontalAlignment="Left" Margin="47,123,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Label Content="Received" HorizontalAlignment="Left" Margin="185,123,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <TextBox x:Name="MPSent" HorizontalAlignment="Left" Height="26" Margin="47,162,0,0" Text="0" VerticalAlignment="Top" Width="76" IsUndoEnabled="False" MaxLines="1" Grid.Column="1" IsReadOnly="True" />
+        <TextBox x:Name="MPReceived" HorizontalAlignment="Left" Height="26" Margin="185,160,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
+        <TextBox x:Name="ADSent" HorizontalAlignment="Left" Height="26" Margin="47,214,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
+        <TextBox x:Name="ADReceived" HorizontalAlignment="Left" Height="26" Margin="185,214,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
         <Button x:Name="StartButton" Content="Start" Grid.Column="1" HorizontalAlignment="Left" Margin="30,278,0,0" VerticalAlignment="Top" Width="75" Click="StartButton_Click"/>
         <Button x:Name="ExitButton" Content="Exit" Grid.Column="1" HorizontalAlignment="Left" Margin="234,278,0,0" VerticalAlignment="Top" Width="75" Click="ExitButton_Click"/>
-        <TextBox x:Name="MissionPlannerAddress" HorizontalAlignment="Left" Height="26" Margin="79,30,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="108" Grid.Column="1" IsReadOnly="True"/>
+        <TextBox x:Name="MissionPlannerAddress" HorizontalAlignment="Left" Height="26" Margin="47,30,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="108" Grid.Column="1" IsReadOnly="True"/>
+        <CheckBox x:Name="AsServer" Content="CheckBox" Grid.Column="1" HorizontalAlignment="Left" Height="16" Margin="296,77,0,0" VerticalAlignment="Top" Width="13" RenderTransformOrigin="2.692,0.125" Checked="AsServer_Checked" Unchecked="AsServer_Checked" IsChecked="True"/>
+        <Label Content="Connect as Server" HorizontalAlignment="Left" Margin="315,72,0,0" VerticalAlignment="Top" Grid.Column="1"/>
 
     </Grid>
 </Window>

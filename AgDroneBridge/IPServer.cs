@@ -29,6 +29,7 @@ public class IPServer
     private Int64 mMPSent;
     private Int64 mMPReceived;
     private bool mRunning = true;
+    private bool mConnectingAsServer = true;
 
     private const int SERVER_CHANNEL = 0;
     private const int CLIENT_CHANNEL = 1;
@@ -66,22 +67,29 @@ public class IPServer
         return count;
     }
 
-    public void Start(string localPort, string remoteAddress, string remotePort)
+    public void Start(string localPort, string remoteAddress, string remotePort, bool connectAsServer)
     {
         //mLocalPort = localPort;
         //mRemotePort = remotePort;
         //mRemoteAddress = remoteAddress;
+        mConnectingAsServer = connectAsServer;
 
         mServerThread1 = new Thread(new ParameterizedThreadStart(Server));
         var params1 = new List<string>() { "127.0.0.1", localPort, "true" };
         mServerThread1.Start(params1);
 
-        mServerThread2 = new Thread(new ParameterizedThreadStart(Server));
-        var params2 = new List<string>() { remoteAddress, remotePort, "false" };
-        mServerThread2.Start(params2);
-
-//        mClientThread = new Thread(new ThreadStart(Client));
-//        mClientThread.Start();
+        if (connectAsServer)
+        {
+            mServerThread2 = new Thread(new ParameterizedThreadStart(Server));
+            var params2 = new List<string>() { remoteAddress, remotePort, "false" };
+            mServerThread2.Start(params2);
+        }
+        else
+        {
+            mClientThread = new Thread(new ParameterizedThreadStart(Client));
+            var params2 = new List<string>() { remoteAddress, remotePort, "false" };
+            mClientThread.Start(params2);
+        }
     }
 
     public void Stop()
@@ -91,13 +99,17 @@ public class IPServer
         mServerThread1.Abort();
         // mServerThread.Join();
 
-        mServerThread2.Abort();
-        // mServerThread.Join();
-
-        //mClientThread.Abort();
-       // mServerThread.Join();
+        if (mConnectingAsServer)
+        {
+            mServerThread2.Abort();
+            // mServerThread.Join();
+        }
+        else
+        {
+            mClientThread.Abort();
+            //mClientThread.Join();
+        }
     }
-//    public void Server(string netAddr, int port)
 
     /*{arams:
      *    string    IP Addr
@@ -218,52 +230,88 @@ public class IPServer
         }    
     }
 
-    // public void Client() {
-    //    while (true)
-    //    {
+    public void Client(Object param)
+    {
+        string netaddr = "";
+        int port = 0;
+        bool isLocal = false;
 
-    //        try
-    //        {
-    //            TcpClient tcpclnt = new TcpClient();
-    //            Console.WriteLine("Connecting to AgDrone at " + mRemoteAddress + " " + mRemotePort);
+        try
+        {
+            List<string> paramList = (List<string>)param;
 
-    //            tcpclnt.Connect(mRemoteAddress, mRemotePort);
-    //            // use the ipaddress as in the server program
+            netaddr = paramList[0];
+            port = Convert.ToInt32(paramList[1]);
+            isLocal = Convert.ToBoolean(paramList[2]);
 
-    //            Console.WriteLine("AgDrone Connected");
+            Console.WriteLine("Server is starting up at " + netaddr + " " + port + " " + isLocal);
 
-    //            mRemoteStream = tcpclnt.GetStream();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Invalid parameters to IP Server initializer");
+            Console.WriteLine("Server is terminating ********************************");
+            return;
+        }
 
-    //            byte[] buffer = new byte[200];
-    //            int len;
-    //            mApp.SetADConnected(true);
-    //            while (tcpclnt.Connected) // (tcpclnt.Available != 0)
-    //            {
-    //                //lock (mRemoteStream)
-    //                {
-    //                    len = mRemoteStream.Read(buffer, 0, 200);
-    //                }
+        while (mRunning)
+        {
 
-    //                mADReceived += ProcessBuffer(buffer, len, CLIENT_CHANNEL, mLocalStream);
-    //                mApp.SetADReceived(mADReceived);
-    //            }
+            try
+            {
+                TcpClient tcpclnt = new TcpClient();
+                Console.WriteLine("Connecting to AgDrone at " + netaddr + " " + port);
 
-    //            mApp.SetADConnected(false);
+                tcpclnt.Connect(netaddr, port);
+                // use the ipaddress as in the server program
 
-    //            Console.WriteLine("Remote connection was closed\n");
+                Console.WriteLine("AgDrone Connected");
 
-    //            mRemoteStream.Close();
-    //            mRemoteStream = null;
+                mRemoteStream = tcpclnt.GetStream();
 
-    //            tcpclnt.Close();
-    //        }
+                byte[] buffer = new byte[200];
+                int len;
+                mApp.SetADConnected(true);
+                int numZeros = 0;
+                try
+                {
+                    while (tcpclnt.Connected) // (tcpclnt.Available != 0)
+                    {
+                        len = mRemoteStream.Read(buffer, 0, 200);
 
-    //        catch (Exception e)
-    //        {
-    //            Console.WriteLine("Error..... " + e.StackTrace);
-    //        }
-    //    }
-    //}
+                        if (len > 0)
+                        {
+                            mADReceived += ProcessBuffer(buffer, len, CLIENT_CHANNEL, mLocalStream);
+                            mApp.SetADReceived(mADReceived);
+                            numZeros = 0;
+                        }
+                        else
+                        {
+                            // If we get a bunch of zeros in a row, assume the connection is broken
+                            if (++numZeros > 10) break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception while processing clent data: " + e.ToString());
+                }
+                mApp.SetADConnected(false);
+
+                Console.WriteLine("Remote connection was closed\n");
+
+                mRemoteStream.Close();
+                mRemoteStream = null;
+
+                tcpclnt.Close();
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine("Error..... " + e.StackTrace);
+            }
+        }
+    }
 
 
 }

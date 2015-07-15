@@ -24,11 +24,8 @@ namespace AgDroneBridge
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        protected void SetMyAddress()
         {
-            InitializeComponent();
-            mIPServer = new IPServer(this);
-
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface ni in nics)
             {
@@ -45,6 +42,12 @@ namespace AgDroneBridge
                 }
             }
         }
+        public MainWindow()
+        {
+            InitializeComponent();
+            mIPServer = new IPServer(this);
+            SetMyAddress();
+        }
 
         private IPServer mIPServer;
        
@@ -58,7 +61,7 @@ namespace AgDroneBridge
             else 
             {
                 StartButton.Content = "Stop";
-                mIPServer.Start(LocalPort.Text, AgDroneAddress.Text, AgDronePort.Text);
+                mIPServer.Start(LocalPort.Text, AgDroneAddress.Text, AgDronePort.Text, (bool)AsServer.IsChecked);
             }
         }
 
@@ -145,6 +148,18 @@ namespace AgDroneBridge
         protected void UpdateMPSent(string text)
         {
             MPSent.Text = text;
+        }
+
+        private void AsServer_Checked(object sender, RoutedEventArgs e)
+        {
+            if ((bool)AsServer.IsChecked)
+            {
+                SetMyAddress();
+                AgDroneAddress.IsReadOnly = true;
+            } else {
+                AgDroneAddress.IsReadOnly = false;
+            }
+            Console.WriteLine("AsServer: " + (bool)AsServer.IsChecked);
         }
     }
 }
