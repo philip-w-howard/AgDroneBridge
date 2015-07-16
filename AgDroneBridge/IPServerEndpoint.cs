@@ -16,7 +16,8 @@ namespace AgDroneBridge
         protected TcpListener mListener;
         protected Socket mSocket;
 
-        public IPServerEndpoint(string netAddr, int port)
+        public IPServerEndpoint(string netAddr, int port) 
+            : base()
         {
             mNetAddr = netAddr;
             mPort = port;
@@ -29,7 +30,6 @@ namespace AgDroneBridge
 
                 Console.WriteLine("The server is running at port " + port);    
                 Console.WriteLine("The local End point is  :" + mListener.LocalEndpoint );
-                Console.WriteLine("Waiting for a connection.....");
             }
             catch (Exception e)
             {
@@ -45,8 +45,17 @@ namespace AgDroneBridge
 
         protected override void MakeConnection()
         {
-            mSocket = mListener.AcceptSocket();
-            mIsOpen = true;
+            try
+            {
+                Console.WriteLine("Waiting for a connection on " + mListener.LocalEndpoint);
+                mSocket = mListener.AcceptSocket();
+                mIsOpen = true;
+                Console.WriteLine("Connection formed on " + mSocket.LocalEndPoint + " to " + mSocket.RemoteEndPoint);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception while making connection: " + e.ToString());
+            }
         }
 
         protected override bool IsConnected()
@@ -71,8 +80,11 @@ namespace AgDroneBridge
         {
             try
             {
-                mSocket.Send(buff);
-                mSent++;
+                if (mSocket != null)
+                {
+                    mSocket.Send(buff);
+                    mSent++;
+                }
             }
             catch (Exception e)
             {

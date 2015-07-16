@@ -20,6 +20,25 @@ namespace AgDroneBridge
         protected int mReceived = 0;
         protected int mSent = 0;
         protected bool mRunning = true;
+        protected Thread mProcessor;
+
+        public IPEndpoint()
+        {
+            Console.WriteLine("Starting processing thread");
+            mProcessor = new Thread(ProcessInput);
+        }
+         
+        public void Start()
+        {
+            mProcessor.Start();
+        }
+
+        public void Stop()
+        {
+            mRunning = false;
+            mProcessor.Abort();
+            //mProcessor.Join();
+        }
 
         public void SetDest(IPEndpoint dest)
         {
@@ -59,8 +78,9 @@ namespace AgDroneBridge
             return count;
         }
 
-        public void ProcessInput()
+        protected void ProcessInput()
         {
+            Console.WriteLine("Processing input for server");
             try
             {
                 while (mRunning)

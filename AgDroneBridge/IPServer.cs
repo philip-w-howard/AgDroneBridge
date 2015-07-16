@@ -21,8 +21,6 @@ namespace AgDroneBridge
         //private int mLocalPort;
         //private int mRemotePort;
         //private string mRemoteAddress;
-        private Thread mServerThread1;
-        private Thread mServerThread2;
         private Thread mClientThread;
         private AgDroneBridge.MainWindow mApp;
         private Stream mRemoteStream;
@@ -80,15 +78,11 @@ namespace AgDroneBridge
             //mRemoteAddress = remoteAddress;
             mConnectingAsServer = connectAsServer;
 
-            mServerThread1 = new Thread(new ParameterizedThreadStart(Server));
-            var params1 = new List<string>() { "127.0.0.1", localPort, "true" };
-            mServerThread1.Start(params1);
+            mMPEndpoint = new MissionPlannerServerEndpoint(mApp, "127.0.0.1", Convert.ToInt32(localPort));
 
             if (connectAsServer)
             {
-                mServerThread2 = new Thread(new ParameterizedThreadStart(Server));
-                var params2 = new List<string>() { remoteAddress, remotePort, "false" };
-                mServerThread2.Start(params2);
+                mADEndpoint = new AgDroneServerEndpoint(mApp, remoteAddress, Convert.ToInt32(remotePort));
             }
             else
             {
@@ -99,25 +93,18 @@ namespace AgDroneBridge
 
             mMPEndpoint.SetDest(mADEndpoint);
             mADEndpoint.SetDest(mMPEndpoint);
+
+            mMPEndpoint.Start();
+            mADEndpoint.Start();
+
         }
 
         public void Stop()
         {
             mRunning = false;
 
-            mServerThread1.Abort();
-            // mServerThread.Join();
-
-            if (mConnectingAsServer)
-            {
-                mServerThread2.Abort();
-                // mServerThread.Join();
-            }
-            else
-            {
-                mClientThread.Abort();
-                //mClientThread.Join();
-            }
+            mMPEndpoint.Stop();
+            mADEndpoint.Stop();
         }
 
         /*{arams:
