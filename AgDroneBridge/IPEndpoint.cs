@@ -21,6 +21,7 @@ namespace AgDroneBridge
         protected int mSent = 0;
         protected bool mRunning = true;
         protected Thread mProcessor;
+        protected System.IO.StreamWriter mLogFile;
 
         public IPEndpoint()
         {
@@ -45,6 +46,8 @@ namespace AgDroneBridge
             mDest = dest;
         }
 
+        protected abstract void UpdateCounters();
+
         protected abstract void SetDisconnected();
 
         protected abstract void MakeConnection();
@@ -66,6 +69,12 @@ namespace AgDroneBridge
                 recv = MavlinkProcessor.process_byte(mChannel, buff[ii]);
                 if (recv.Length != 0)
                 {
+                    if (mLogFile != null)
+                    {
+                        mLogFile.Write("Channel: " + mChannel + " len: " + recv.Length + " ");
+                        mLogFile.WriteLine(string.Format("{0,4:X} {1,4:X} {2,4:X} {3,4:X} {4,4:X} {5,4:X}",
+                            recv[0], recv[1], recv[2], recv[3], recv[4], recv[5]));
+                    }
                     count++;
 
                     if (mDest != null)
@@ -80,7 +89,7 @@ namespace AgDroneBridge
 
         protected void ProcessInput()
         {
-            Console.WriteLine("Processing input for server");
+            Console.WriteLine("Processing input for server on thread " + System.Threading.Thread.CurrentThread.ManagedThreadId);
             try
             {
                 while (mRunning)
@@ -98,6 +107,7 @@ namespace AgDroneBridge
                         if (len > 0)
                         {
                             mReceived += ProcessBuffer(buffer, len);
+                            UpdateCounters();
                             numZeros = 0;
                         }
                         else

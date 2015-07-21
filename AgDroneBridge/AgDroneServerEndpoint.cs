@@ -12,6 +12,8 @@ namespace AgDroneBridge
             : base(netAddr, port)
         {
             mApp = app;
+            mLogFile = new System.IO.StreamWriter(@"ad.log");
+            mChannel = 1;
         }
 
         protected MainWindow mApp;
@@ -30,8 +32,13 @@ namespace AgDroneBridge
 
         protected override void Send(byte[] buff)
         {
-            mApp.SetADReceived(mReceived);
             base.Send(buff);
+            UpdateCounters();
+        }
+        
+        protected override void UpdateCounters()
+        {
+            mApp.SetADReceived(mReceived);
             mApp.SetADSent(mSent);
         }
     }

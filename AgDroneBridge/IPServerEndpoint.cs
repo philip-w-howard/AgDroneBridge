@@ -8,7 +8,7 @@ using System.Net;
 
 namespace AgDroneBridge
 {
-    class IPServerEndpoint : IPEndpoint
+    abstract class IPServerEndpoint : IPEndpoint
     {
         protected string mNetAddr;
         protected int mPort;
@@ -41,6 +41,7 @@ namespace AgDroneBridge
         {
             mSocket.Close();
             mIsOpen = false;
+            mSocket = null;
         }
 
         protected override void MakeConnection()
