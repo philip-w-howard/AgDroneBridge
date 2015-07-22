@@ -50,6 +50,8 @@ namespace AgDroneBridge
         }
 
         private IPServer mIPServer;
+        protected Int64 mADConnects;
+        protected Int64 mMPConnects;
        
          private void StartButton_Click(object sender, RoutedEventArgs e)
         {
@@ -78,7 +80,10 @@ namespace AgDroneBridge
             Brush color;
 
             if (connected)
+            {
                 color = Brushes.ForestGreen;
+                mMPConnects++;
+            }
             else
                 color = Brushes.Red;
 
@@ -89,7 +94,10 @@ namespace AgDroneBridge
             Brush color;
 
             if (connected)
+            {
                 color = Brushes.ForestGreen;
+                mADConnects++;
+            }
             else
                 color = Brushes.Red;
 
@@ -124,14 +132,31 @@ namespace AgDroneBridge
                 new object[] { count.ToString() }
             );
         }
+        public void SetMPConnections(Int64 count)
+        {
+            MPSent.Dispatcher.Invoke(
+                new UpdateTextCallback(UpdateMPConnections),
+                new object[] { count.ToString() }
+            );
+        }
+        public void SetADConnections(Int64 count)
+        {
+            MPSent.Dispatcher.Invoke(
+                new UpdateTextCallback(UpdateADConnections),
+                new object[] { count.ToString() }
+            );
+        }
 
         protected void UpdateMPLabel(Brush brush)
         {
             MPLabel.Background = brush;
+            MPConnections.Text = mMPConnects.ToString();
+
         }
         protected void UpdateADLabel(Brush brush)
         {
             ADLabel.Background = brush;
+            ADConnections.Text = mADConnects.ToString();
         }
         protected void UpdateMPReceived(string text)
         {
@@ -148,6 +173,15 @@ namespace AgDroneBridge
         protected void UpdateMPSent(string text)
         {
             MPSent.Text = text;
+        }
+
+        protected void UpdateMPConnections(string text)
+        {
+            MPConnections.Text = text;
+        }
+        protected void UpdateADConnections(string text)
+        {
+            ADConnections.Text = text;
         }
 
         private void AsServer_Checked(object sender, RoutedEventArgs e)

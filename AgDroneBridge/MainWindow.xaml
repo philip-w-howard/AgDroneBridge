@@ -26,6 +26,9 @@
         <TextBox x:Name="MissionPlannerAddress" HorizontalAlignment="Left" Height="26" Margin="47,30,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="108" Grid.Column="1" IsReadOnly="True"/>
         <CheckBox x:Name="AsServer" Content="CheckBox" Grid.Column="1" HorizontalAlignment="Left" Height="16" Margin="296,77,0,0" VerticalAlignment="Top" Width="13" RenderTransformOrigin="2.692,0.125" Checked="AsServer_Checked" Unchecked="AsServer_Checked" IsChecked="True"/>
         <Label Content="Connect as Server" HorizontalAlignment="Left" Margin="315,72,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Label Content="Connections" HorizontalAlignment="Left" Margin="335,123,0,0" VerticalAlignment="Top" Grid.Column="1" RenderTransformOrigin="2.86,0.462"/>
+        <TextBox x:Name="MPConnections" HorizontalAlignment="Left" Height="26" Margin="335,160,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
+        <TextBox x:Name="ADConnections" HorizontalAlignment="Left" Height="26" Margin="335,214,0,0" Text="0" VerticalAlignment="Top" Width="76" IsReadOnly="True" IsUndoEnabled="False" MaxLines="1" Grid.Column="1"/>
 
     </Grid>
 </Window>

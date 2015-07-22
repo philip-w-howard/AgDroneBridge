@@ -12,7 +12,7 @@ namespace AgDroneBridge
             : base(netAddr, port)
         {
             mApp = app;
-            mLogFile = new System.IO.StreamWriter(@"ad.log");
+            //mLogFile = new System.IO.StreamWriter(@"ad.log");
             mChannel = 1;
         }
 
