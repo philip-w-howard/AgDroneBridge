@@ -39,6 +39,7 @@ namespace AgDroneBridge
 
         protected override void SetDisconnected()
         {
+            mSocket.Shutdown(SocketShutdown.Both);
             mSocket.Close();
             mIsOpen = false;
             mSocket = null;
@@ -61,7 +62,7 @@ namespace AgDroneBridge
 
         protected override bool IsConnected()
         {
-            return mIsOpen && mSocket.Connected;
+            return mIsOpen && mSocket != null && mSocket.Connected;
         }
 
         protected override int GetData(byte[] buffer)
@@ -70,8 +71,9 @@ namespace AgDroneBridge
             {
                 return mSocket.Receive(buffer);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine("Error getting data on channel " + mChannel + " so disconnecting.\n" + e.ToString());
                 SetDisconnected();
                 return 0;
             }

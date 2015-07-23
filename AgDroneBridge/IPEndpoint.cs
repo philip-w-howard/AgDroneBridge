@@ -113,7 +113,11 @@ namespace AgDroneBridge
                         else
                         {
                             // If we get a bunch of zeros in a row, assume the connection is broken
-                            if (++numZeros > 10) SetDisconnected();
+                            if (++numZeros > 10)
+                            {
+                                SetDisconnected();
+                                Console.WriteLine("Disconnecting channel " + mChannel + " due to too many zeros");
+                            }
                         }
                     }
                 }
