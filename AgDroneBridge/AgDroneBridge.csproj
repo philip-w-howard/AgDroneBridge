@@ -65,6 +65,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AgDroneClientEndpoint.cs" />
+    <Compile Include="Heartbeat.cs" />
     <Compile Include="IPEndpoint.cs" />
     <Compile Include="IPServer.cs" />
     <Compile Include="IPServerEndpoint.cs" />
