@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading;
 
 namespace AgDroneBridge
 {
@@ -50,6 +51,11 @@ namespace AgDroneBridge
             try
             {
                 Console.WriteLine("Waiting for a connection on " + mListener.LocalEndpoint);
+                while (!mListener.Pending())
+                {
+                    Thread.Sleep(500);
+                    if (!mRunning) return;   // <<<<----- Exit if we are no longer running
+                }
                 mSocket = mListener.AcceptSocket();
                 mIsOpen = true;
                 Console.WriteLine("Connection formed on " + mSocket.LocalEndPoint + " to " + mSocket.RemoteEndPoint);
@@ -79,7 +85,7 @@ namespace AgDroneBridge
             }
         }
 
-        protected override void Send(byte[] buff)
+        public override void Send(byte[] buff)
         {
             try
             {

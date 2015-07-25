@@ -30,7 +30,7 @@ namespace AgDroneBridge
             mApp.SetMPConnected(false);
         }
 
-        protected override void Send(byte[] buff)
+        public override void Send(byte[] buff)
         {
             base.Send(buff);
             UpdateCounters();

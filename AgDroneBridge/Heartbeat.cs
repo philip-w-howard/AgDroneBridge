@@ -11,9 +11,13 @@ namespace AgDroneBridge
     {
         protected Thread mThread;
         protected bool mRunning;
+        protected IPEndpoint mAgDrone;
+        protected IPEndpoint mMissionPlanner;
 
-        public Heartbeat()
+        public Heartbeat(IPEndpoint mp, IPEndpoint ad)
         {
+            mMissionPlanner = mp;
+            mAgDrone = ad;
         }
 
         public void Start()
@@ -31,8 +35,14 @@ namespace AgDroneBridge
 
         protected void BeatHeart()
         {
+            Thread.Sleep(1000);
             while (mRunning)
             {
+                byte[] msg = mavlinklib.MavlinkProcessor.create_heartbeat();
+                mAgDrone.Send(msg);
+                mMissionPlanner.Send(msg);
+
+                // NOTE: want Sleep to be last thing in loop, so Stop will most likely execute immediately before the check to mRunning
                 Thread.Sleep(1000);
             }
         }

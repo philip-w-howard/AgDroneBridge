@@ -12,7 +12,7 @@ namespace AgDroneBridge
     {
         protected string mNetAddr;
         protected int mPort;
-        protected bool mIsOpen = false;
+        protected volatile bool mIsOpen = false;
         //protected TcpListener mListener;
         protected Socket mSocket;
         TcpClient mTCPCLient;
@@ -32,7 +32,7 @@ namespace AgDroneBridge
             mTCPCLient.Close();
             mIsOpen = false;
             mSocket = null;
-            mApp.SetADConnected(false);
+            if (mRunning) mApp.SetADConnected(false);
         }
 
         protected override void MakeConnection()
@@ -50,7 +50,6 @@ namespace AgDroneBridge
                 mSocket = mTCPCLient.Client;
                 //mRemoteStream = tcpclnt.GetStream();
 
-                int numZeros = 0;
                 mIsOpen = true;
                 mApp.SetADConnected(true);
             }
@@ -79,14 +78,17 @@ namespace AgDroneBridge
             }
         }
 
-        protected override void Send(byte[] buff)
+        public override void Send(byte[] buff)
         {
             try
             {
                 if (mSocket != null)
                 {
-                    mSocket.Send(buff);
-                    mSent++;
+                    int len = mSocket.Send(buff);
+                    if (len == buff.Length)
+                        mSent++;
+                    else
+                        Console.WriteLine("ERROR: Sent too few bytes");
                 }
             }
             catch (Exception e)
@@ -98,8 +100,8 @@ namespace AgDroneBridge
 
         protected override void UpdateCounters()
         {
-            mApp.SetADReceived(mReceived);
-            mApp.SetADSent(mSent);
+            if (mRunning) mApp.SetADReceived(mReceived);
+            if (mRunning) mApp.SetADSent(mSent);
         }
     }
 }

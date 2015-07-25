@@ -27,19 +27,19 @@ namespace AgDroneBridge
         protected override void SetDisconnected()
         {
             base.SetDisconnected();
-            mApp.SetADConnected(false);
+            if (mRunning) mApp.SetADConnected(false);
         }
 
-        protected override void Send(byte[] buff)
+        public override void Send(byte[] buff)
         {
             base.Send(buff);
-            UpdateCounters();
+            if (mRunning) UpdateCounters();
         }
         
         protected override void UpdateCounters()
         {
-            mApp.SetADReceived(mReceived);
-            mApp.SetADSent(mSent);
+            if (mRunning) mApp.SetADReceived(mReceived);
+            if (mRunning) mApp.SetADSent(mSent);
         }
     }
 }

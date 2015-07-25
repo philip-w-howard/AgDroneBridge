@@ -37,8 +37,8 @@ namespace AgDroneBridge
         public void Stop()
         {
             mRunning = false;
-            mProcessor.Abort();
-            //mProcessor.Join();
+            //mProcessor.Abort();
+            mProcessor.Join();
         }
 
         public void SetDest(IPEndpoint dest)
@@ -56,7 +56,7 @@ namespace AgDroneBridge
 
         protected abstract int GetData(byte[] buffer);
 
-        protected abstract void Send(byte[] buff);
+        public abstract void Send(byte[] buff);
 
         protected int ProcessBuffer(byte[] buff, int len)
         {
