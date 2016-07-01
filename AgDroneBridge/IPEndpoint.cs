@@ -19,7 +19,7 @@ namespace AgDroneBridge
         protected int mChannel;
         protected int mReceived = 0;
         protected int mSent = 0;
-        protected bool mRunning = true;
+        protected volatile bool mRunning = true;
         protected Thread mProcessor;
         protected System.IO.StreamWriter mLogFile;
 
@@ -34,9 +34,11 @@ namespace AgDroneBridge
             mProcessor.Start();
         }
 
-        public void Stop()
+        virtual public void Stop()
         {
             mRunning = false;
+            SetDisconnected();
+
             //mProcessor.Abort();
             mProcessor.Join();
         }
@@ -100,7 +102,7 @@ namespace AgDroneBridge
 
                     MakeConnection();
 
-                    while (IsConnected())
+                    while (IsConnected() && mRunning)
                     {
                         len = GetData(buffer);
 
@@ -128,6 +130,7 @@ namespace AgDroneBridge
                 Console.WriteLine(e.StackTrace);
                 Console.WriteLine("Server is shutting down******************************");
             }
+            Console.WriteLine("Done processing input for server on thread " + System.Threading.Thread.CurrentThread.ManagedThreadId);
         }
 
     }

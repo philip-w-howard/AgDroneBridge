@@ -28,7 +28,6 @@ namespace AgDroneBridge
                  mListener = new TcpListener(ipAd, port);
 
                 mListener.Start();
-
                 Console.WriteLine("The server is running at port " + port);    
                 Console.WriteLine("The local End point is  :" + mListener.LocalEndpoint );
             }
@@ -38,10 +37,20 @@ namespace AgDroneBridge
             }
         }
 
+        virtual public void Stop()
+        {
+            mRunning = false;
+            mListener.Stop();
+            base.Stop();
+        }
         protected override void SetDisconnected()
         {
-            mSocket.Shutdown(SocketShutdown.Both);
-            mSocket.Close();
+            if (mSocket != null)
+            {
+                mSocket.Shutdown(SocketShutdown.Both);
+                mSocket.Close();
+            }
+
             mIsOpen = false;
             mSocket = null;
         }
@@ -54,7 +63,11 @@ namespace AgDroneBridge
                 while (!mListener.Pending())
                 {
                     Thread.Sleep(500);
-                    if (!mRunning) return;   // <<<<----- Exit if we are no longer running
+                    if (!mRunning)
+                    {
+                        Console.WriteLine("Server shutting down on " + mListener.LocalEndpoint);
+                        return;   // <<<<----- Exit if we are no longer running
+                    }
                 }
                 mSocket = mListener.AcceptSocket();
                 mIsOpen = true;
@@ -62,7 +75,8 @@ namespace AgDroneBridge
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception while making connection: " + e.ToString());
+                Console.WriteLine("Exception while making connection on " +
+                                  mListener.LocalEndpoint + ": " + e.ToString());
             }
         }
 

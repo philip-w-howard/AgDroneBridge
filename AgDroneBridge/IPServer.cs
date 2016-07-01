@@ -19,7 +19,6 @@ namespace AgDroneBridge
         }
 
         private AgDroneBridge.MainWindow mApp;
-        private volatile bool mRunning = true;
         private bool mConnectingAsServer = true;
 
         private IPEndpoint mMPEndpoint;
@@ -56,8 +55,6 @@ namespace AgDroneBridge
 
         public void Stop()
         {
-            mRunning = false;
-
             mHeartbeat.Stop();
             mMPEndpoint.Stop();
             mADEndpoint.Stop();
